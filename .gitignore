@@ -1,0 +1,6 @@
+/_build
+/env3.10-ai
+.ipynb_checkpoints/
+.vscode
+test.*
+__pycache__
