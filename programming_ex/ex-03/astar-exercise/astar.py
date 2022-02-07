@@ -104,7 +104,7 @@ def astar(start_state, goaltest, h):
                 f = g[succ_state] + h(succ_state)
                 Q.put((f, succ_state))
             else:
-                # This allows the algorithm to choose a better successor state, 
+                # This allows the algorithm to switch between different successor state for a better one, 
                 # guaranteeing the (yet) best found distance to a state
                 if g[succ_state] > g[state] + action.cost:
                     g[succ_state] = g[state] + action.cost
