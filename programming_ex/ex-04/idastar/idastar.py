@@ -1,6 +1,7 @@
 
 import random
 from math import inf
+from types import NoneType
 from action import Action
 
 ### Iterative Deepening A* -- IDA*
@@ -49,16 +50,35 @@ def doDFS(s,g,bound,goaltest,h,path):
     if totalcalls > 10000000:
         return None
 ### Write your code here
-### Write your code here
-### Write your code here
-### Write your code here
-### Write your code here
-### Write your code here
-### Write your code here
-### Write your code here
-### Write your code here
-### Write your code here
-### Write your code here
+    f = g + h(s)
+
+    if f > bound:
+        return f
+    
+    # When the given state is the goal, return an empty action list (the SOLVED)
+    if goaltest(s):
+        return []
+    
+    min_bound = inf
+    for action, succ in s.successors():
+        if succ not in path: # to avoid cycle
+            f_succ = doDFS(succ, g + action.cost, bound, goaltest, h, path + [succ])
+            
+            # f_succ is None
+            if f_succ == None: 
+                return f_succ
+
+            # When the successor state belongs to the solution (SOLVED), leading to the goal state
+            if isinstance(f_succ, list):
+                # the SOLVED to return is an action list, 
+                # where the current action that leads to the successor is the beginning followed by the successive actions (f_succ) 
+                return [action] + f_succ
+            
+            # update the search bound
+            if f_succ < min_bound:
+                min_bound = f_succ
+
+    return min_bound
 ### Write your code here
 
 ### NOTE: The grader will call both IDAstar and doDFS, so keep

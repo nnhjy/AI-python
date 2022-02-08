@@ -288,4 +288,4 @@ if __name__ == "__main__":
     print("----")
     print("z=")
     print(str(z))
-    printf("Moreover, y and z are the same state: {y == z}.")
+    print("Moreover, y and z are the same state: {y == z}.")
