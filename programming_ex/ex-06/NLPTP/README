@@ -124,6 +124,12 @@ THE TPTP SYNTAX FOR FIRST-ORDER FORMULAS IN THE PREDICATE LOGIC:
    If the result is inconclusive, then we don't know.
 
 DOWNLOAD GKC: https://github.com/tammet/gkc/releases
+
+For Windows OS, simply download the 'gkc.exe' 
+and call in the cmd terminal under the directory of the downloaded executable:
+
+   ./gkc arg1 arg2 ...
+
 RUNNING GKC:
 
 GKC takes the name of a TPTP formatted file in the command line.
