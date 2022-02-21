@@ -4,6 +4,7 @@
 .vscode
 test.*
 __pycache__
-.exe
-.out
-.TPTP
+*.exe
+*.out
+*.TPTP
+parsetab.py
