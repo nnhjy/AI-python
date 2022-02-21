@@ -119,7 +119,7 @@ def at_least_one(formulas):
     # Please describe a formula to specify at least one of the given formulas
     # should be true.
 
-    return OR([f for f in formulas])
+    return OR(formulas)
 
 
 def at_most_one(formulas):
@@ -146,8 +146,10 @@ def at_most_one(formulas):
     # ====
     # You can use the function 'allpairs' above to get the pairing of formulas.
 
-    return AND([NOT(AND(pair)) for pair in all_pairs(formulas)])
-
+    return AND([
+        NOT(AND([f1, f2])) 
+        for f1, f2 in all_pairs(formulas)
+    ])
 
 def exactly_one(formulas):
     """
@@ -237,7 +239,10 @@ def mutually_exclusive_tasks(tasks, resource_need, time_interval):
     # needing the same resource
 
     return AND([
-        AND([NOT(AND([variable(task1, t), variable(task2, t)])) for t in range(time_interval[0], time_interval[1], 1)])
+        AND([
+            NOT(AND([variable(task1, t), variable(task2, t)])) 
+            for t in range(time_interval[0], time_interval[1], 1)
+        ])
         for task1, task2 in all_pairs(tasks) 
         if resource_need[task1] == resource_need[task2]
     ])
@@ -266,17 +271,20 @@ def task_ordering(orders, time_interval):
     # ========
     # Please describe a formula to specify the required task ordering
 
-    intervals = [t for t in range(time_interval[0], time_interval[1], 1)]
+    # This implementation is incorrect as some time pairs are ignored to maintain uniqueness (how?).
+    # intervals = [t for t in range(time_interval[0], time_interval[1], 1)]
     # for task1, task2 in orders:
     #     for t1, t2 in all_pairs(intervals):
     #         if t1 >= t2:
     #             NOT(AND([variable(task1, t1), variable(task2, t2)]))
+    #         else:
+    #             NOT(AND([variable(task1, t2), variable(task2, t1)]))
 
     return AND([
         AND([
             NOT(AND([variable(task1, t1), variable(task2, t2)])) 
-            for t1, t2 in all_pairs(intervals) 
-            if t1 >= t2
+            for t2 in range(time_interval[0], time_interval[1], 1) 
+            for t1 in range(t2, time_interval[1], 1)
         ])
         for task1, task2 in orders
     ])
