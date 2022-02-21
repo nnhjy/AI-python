@@ -4,3 +4,6 @@
 .vscode
 test.*
 __pycache__
+.exe
+.out
+.TPTP
