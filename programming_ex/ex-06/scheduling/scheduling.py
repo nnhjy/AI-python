@@ -62,7 +62,7 @@ def variable(task, time_slot):
 #                to create a new formula that expresses at most one formula in
 #                the list must be true.
 #
-#
+# cf. lecture-04-applications-2.pdf at section 5. Logical Reasoning
 # In the second part, we encode the scheduling problem into a SAT problem:
 #
 # TASK 2
@@ -119,6 +119,8 @@ def at_least_one(formulas):
     # Please describe a formula to specify at least one of the given formulas
     # should be true.
 
+    return OR([f for f in formulas])
+
 
 def at_most_one(formulas):
     """
@@ -143,6 +145,8 @@ def at_most_one(formulas):
     # Tips
     # ====
     # You can use the function 'allpairs' above to get the pairing of formulas.
+
+    return AND([NOT(AND(pair)) for pair in all_pairs(formulas)])
 
 
 def exactly_one(formulas):
@@ -193,6 +197,16 @@ def exactly_one_execution(tasks, time_interval):
     # ====
     # You can use the `exactly_one` function, defined above.
 
+    # Assumption: all tasks have the same (unit) duration.
+
+    return AND([
+        exactly_one([
+            variable(task, t) 
+            for t in range(time_interval[0], time_interval[1], 1)
+        ]) 
+        for task in tasks
+    ])
+
 
 def mutually_exclusive_tasks(tasks, resource_need, time_interval):
     """
@@ -222,6 +236,12 @@ def mutually_exclusive_tasks(tasks, resource_need, time_interval):
     # Please describe a formula to forbid the parallel execution of tasks
     # needing the same resource
 
+    return AND([
+        AND([NOT(AND([variable(task1, t), variable(task2, t)])) for t in range(time_interval[0], time_interval[1], 1)])
+        for task1, task2 in all_pairs(tasks) 
+        if resource_need[task1] == resource_need[task2]
+    ])
+
 
 def task_ordering(orders, time_interval):
     """
@@ -245,6 +265,21 @@ def task_ordering(orders, time_interval):
     # Task 2.3
     # ========
     # Please describe a formula to specify the required task ordering
+
+    intervals = [t for t in range(time_interval[0], time_interval[1], 1)]
+    # for task1, task2 in orders:
+    #     for t1, t2 in all_pairs(intervals):
+    #         if t1 >= t2:
+    #             NOT(AND([variable(task1, t1), variable(task2, t2)]))
+
+    return AND([
+        AND([
+            NOT(AND([variable(task1, t1), variable(task2, t2)])) 
+            for t1, t2 in all_pairs(intervals) 
+            if t1 >= t2
+        ])
+        for task1, task2 in orders
+    ])
 
 
 def problem_to_formula(tasks, orders, resource_need, time_horizon):
