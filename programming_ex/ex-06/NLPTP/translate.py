@@ -184,8 +184,11 @@ def p_sentence_top(t):
     'sentence0 : sentence DOT'
     global sentences
     global varcnt
-#    print("Parsed sentence: ",end='')
-#    print(t[1])
+    
+    # Display parsed sentences
+    print("Parsed sentence: ",end='')
+    print(t[1])
+    
     varcnt = 0
     t[0] = 0
     sentences = sentences + [t[1]]
@@ -202,9 +205,14 @@ def p_sentence(t):
 # "John sleeps or Mary dances", which otherwise
 # could only be parsed separately.
 #
-#def p_sentence_or(t):
-#    'sentence : sentence OR sentence'
-#    pass
+def p_sentence_or(t):
+   'sentence : sentence OR sentence'
+   sentence1 = t[1]
+   sentence2 = t[3]
+
+   t[0] = OR(sentence1, sentence2)
+
+   # pass
 
 def p_NP_ID(t):
     'NP	: ID '
@@ -263,9 +271,14 @@ def p_roleCNofWITHs(t):
 # and this new rule will allow also combining multiple VPs to a longer
 # one with "and", as in "makes coffee and watches television".
 #
-#def p_VP_and(t):
-#    'VP : VP AND VP'
-#    pass
+def p_VP_and(t):
+   'VP : VP AND VP'
+   VPf1 = t[1]
+   VPf2 = t[3]
+
+   t[0] = (lambda x: AND(VPf1(x), VPf2(x)))
+
+   # pass
 
 def p_VP_ivID(t):
     'VP : ivID'
@@ -339,9 +352,15 @@ def p_CN_ID(t):
 # predicates, so you need to obtain the semantics of the component CN,
 # and add the 1-place predicate for the adjective to its meaning.
 #
-#def p_CN_ADJ_CN(t):
-#    'CN : adjID CN'
-#    pass
+def p_CN_ADJ_CN(t):
+   'CN : adjID CN'
+   adjIDstr = t[1]
+   CNf = t[2]
+
+   # TODO: Comprehend why
+   t[0] = (lambda x: AND(CNf(x), ATOM(adjIDstr, [x])))
+    
+   # pass
 
 # Error rule
 
@@ -478,7 +497,25 @@ A15 = FORALL("x",FORALL("y",FORALL("z",IMPL(AND(mother(x,y),mother(z,y)),
 A16 = FORALL("x",FORALL("y",FORALL("z",IMPL(AND(father(x,y),father(z,y)),
                                             EQUAL(x,z)))))
 
-familyrelations = [A1,A2,A3,A4,A5,A6,A7,A8,A9,A10,A11,A12,A13,A14,A15,A16]
+# Rearrange the configuration to ease testing relevant assumptions for the inference
+familyrelations = [
+    A1,
+    A2,
+    A3,
+    A4,
+    A5,
+    A6,
+    A7,
+    A8,
+    A9,
+    A10,
+    A11,
+    A12,
+    A13,
+    A14,
+    A15,
+    A16
+]
 
 # Show formulas and generate TPTP output
 
