@@ -30,7 +30,7 @@ def get_data_frequency(data, features):
     return len([item for item in data if all(item[feature] == val for feature, val in features.items())])
 
 # Get conditional probability for given query
-def get_conditional_probability(data, query, condititions):
+def get_conditional_probability(data, query, conditions):
     """
     Get conditional probability for given query.
 
@@ -56,7 +56,7 @@ def get_conditional_probability(data, query, condititions):
     epsilon = 10e-5
     # Dictionary with query A and conditions B...Z
     combined_dictionary = query.copy()
-    combined_dictionary.update(condititions)
+    combined_dictionary.update(conditions)
     # =========================================================
     # TASK 1.1
     #  - Calculate P(A | B...Z)
@@ -65,7 +65,9 @@ def get_conditional_probability(data, query, condititions):
     #  - you can use get_data_frequency(..) 
     # =========================================================
     # CODE HERE! DON'T FORGET TO RETURN SOMETHING ELSE THAN 0!
-    return 0
+    p = get_data_frequency(data, combined_dictionary) / (get_data_frequency(data, conditions) + epsilon)
+
+    return p
     # =========================================================
 
 # Construct a CPT based on query and list of conditional variables
@@ -117,6 +119,8 @@ def construct_probability_table(data, query, conditions):
         # =========================================================
         # CODE HERE! Don't forget to update `result` dictionary!
         # =========================================================
+        result[dict_key] = get_conditional_probability(data, A, B)
+
     return result
 
 # Evaluate probability P(query = val | conditions)
@@ -196,7 +200,7 @@ def exhaustive_enum(G, X, E, e):
     -------
     float
        Sum (over all possible assignments) of the product of
-       P(node | parents(node) over all nodes in G.
+       P(node | parents(node)) over all nodes in G.
 
     """
     total = 0
@@ -232,6 +236,19 @@ def exhaustive_enum(G, X, E, e):
             # =========================================================
             # CODE HERE!
             # =========================================================
+            
+            # Construct the condition "parents(node)"
+            parent_nodes_list = node.parents
+            parent_condition = {key:combined_dictionary[key] for key in parent_nodes_list}
+            # parent_condition = dict([(key, combined_dictionary[key]) for key in parent_nodes_list])
+
+            query_node = node.data_id
+            val_node = combined_dictionary[query_node]
+
+            tmp *= evaluate_node(G, query_node, val_node, parent_condition)
+
+        total += tmp
+
     return total
 
 # Calculate distribution P(targets | e) by brute force search over the hidden variables y
@@ -327,10 +344,19 @@ def sample(G, X, E, e):
             # =========================================================
             # CODE HERE
             # =========================================================
+            w *= G.get_node_probability(variable, parents)
         else:
             # =========================================================
             # CODE HERE
             # =========================================================
+            prob = G.get_node_probability(variable, parents)
+            y = numpy.random.random()
+            if y < prob:
+               value = 1
+            else:
+               value = 0
+        variables.append(variable)
+        assignment.append(value)
     return assignment, w
 
 # Approximate a joint distribution of targets
