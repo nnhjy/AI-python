@@ -152,7 +152,7 @@ class OR(BinaryFormula):
         # Which vars to add?
         varsToAdd1 = vars2.difference(vars1)
         varsToAdd2 = vars1.difference(vars2)
-        # Add U(x) as a conjunct for every missing variable
+        # Add U(x) as a conjunct for every missing variable, subformula1 = phi_1 in lecture-05-databases.pdf page 37
         fixedSubformula1 = reduce(AND,[ ATOM("U",[Var(x)]) for x in varsToAdd1],self.subformula1)
         fixedSubformula2 = reduce(AND,[ ATOM("U",[Var(x)]) for x in varsToAdd2],self.subformula2)
         # Union of the tables obtained from the two disjuncts
@@ -205,10 +205,16 @@ class NOT:
     # the universal relation U so that the relational difference is for tables
     # with the same columns.
     def toRelAlg(self,dbSchema):
-        print("toRelAlg for NOT not yet implemented!")
-        exit(1)
+        # print("toRelAlg for NOT not yet implemented!")
+        # exit(1)
 ###### IMPLEMENT THIS
 ###### IMPLEMENT THIS
+        # See lecture-05-databases.pdf page 37
+        vars = self.subformula.freeVars()
+        # Cartesian product of U(x) for x being free variables
+        complement = reduce(AND,[ ATOM("U",[Var(x)]) for x in vars])
+        # functools.reduce(function, iterable[, initializer])
+        return RAdifference(complement.toRelAlg(dbSchema), self.subformula.toRelAlg(dbSchema))
 
     # Rename some of the quantified variables.
     def quantRename(self,disallowed):
@@ -386,10 +392,12 @@ class FORALL:
             # Variable does not occur in the formula. Ignore quantifier.
             return self.subformula.toRelAlg(dbschema)
         else:
-            print("toRelAlg for FORALL not yet implemented!")
-            exit(1)
+            # print("toRelAlg for FORALL not yet implemented!")
+            # exit(1)
 ###### IMPLEMENT THIS
 ###### IMPLEMENT THIS
+            universe = ATOM("U",[Var(self.var)])
+            return RAdivision(self.subformula.toRelAlg(dbschema), universe.toRelAlg(dbschema))
 
     def quantRename(self,disallowed):
         if self.var not in disallowed:
