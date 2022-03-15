@@ -35,6 +35,12 @@ class TwoStateMachine(mdp.MDP):
             # more entries to the dictionary here.
             #
             # CODE HERE CODE HERE CODE HERE
+            ( TwoStateMachine.States.prone,
+              TwoStateMachine.Actions.stand,
+              TwoStateMachine.States.upright ) : 0,
+            ( TwoStateMachine.States.upright,
+              TwoStateMachine.Actions.walk,
+              TwoStateMachine.States.upright ) : 20,
         }
 
         # Likewise self._probs is a dictionary from (state,action,state) to a probability.
@@ -45,6 +51,15 @@ class TwoStateMachine(mdp.MDP):
             # Structure the same as self._rewards
             #
             # CODE HERE CODE HERE CODE HERE
+            ( TwoStateMachine.States.upright,
+              TwoStateMachine.Actions.walk,
+              TwoStateMachine.States.prone ) : 0.1,
+            ( TwoStateMachine.States.prone,
+              TwoStateMachine.Actions.stand,
+              TwoStateMachine.States.upright ) : 1.0,
+            ( TwoStateMachine.States.upright,
+              TwoStateMachine.Actions.walk,
+              TwoStateMachine.States.upright ) : 0.9,
         }
     
     def R(self, s1, a, s2):
@@ -110,6 +125,9 @@ class TwoStateMachine(mdp.MDP):
         # for any s2 exists among the rewards (or probabilities).
         #
         # CODE HERE CODE HERE CODE HERE
+        for s2 in TwoStateMachine.States:
+            if (s,a,s2) in self._rewards:
+                ss.append(s2)
         
         return set(ss)
 

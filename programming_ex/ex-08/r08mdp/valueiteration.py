@@ -53,6 +53,8 @@ def value_of(mdp, s, a, v, gamma):
     # the rewards R and probabilities P can be retrieved.
     #
     # CODE HERE CODE HERE CODE HERE
+    return sum(mdp.P(s,a,s2) * (mdp.R(s,a,s2) + gamma * v[s2]) for s2 in mdp.successor_states(s,a))
+
     pass
         
 def value_iteration(mdp, gamma, epsilon = 0.001):
@@ -61,7 +63,7 @@ def value_iteration(mdp, gamma, epsilon = 0.001):
     
     Parameters
     ----------
-    mpd : mdp.MPD object
+    mdp : mdp.MDP object
        Markov Descision Process
     gamma : float > 0
        Discount factor
@@ -84,6 +86,20 @@ def value_iteration(mdp, gamma, epsilon = 0.001):
     #
     # CODE HERE CODE HERE CODE HERE
     #
+    v = dict((s, 0) for s in mdp.states())
+    # v_next = v just assigns a pointer to v_next that points towards the same place in RAM as the pointer of v does,
+    # i.e. v_next and v become the same pointer in this way
+    v_next = v.copy()
+
+    while True:
+      for s in mdp.states():
+         v_next[s] = max(value_of(mdp, s, a, v, gamma) for a in mdp.applicable_actions(s))
+
+      gap = epsilon * (1 - gamma) / (2 * gamma)
+      if all(abs(v_next[s] - v[s]) < gap for s in mdp.states()):
+         return v_next
+      else:
+         v = v_next.copy()
     pass
     
 def make_policy(mdp, optimal_values, gamma):
