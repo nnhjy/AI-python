@@ -270,7 +270,7 @@ class ATOM:
             ra1 = ra0
         else:
             # Select rows where the column value matches the constant.
-            ra1a = RAselect(functools.reduce(cAnd,[ cEQ(cCOL(col),cCONST(term.value)) for (col,term) in constantCols]),ra0)
+            ra1a = RAselect(reduce(cAnd,[ cEQ(cCOL(col),cCONST(term.value)) for (col,term) in constantCols]),ra0)
             # Keep the non-constant columns, which correspond to variables.
             ra1 = RAproject({ col for (col,term) in varCols},ra1a)
         # Rename the columns to the variable names.
