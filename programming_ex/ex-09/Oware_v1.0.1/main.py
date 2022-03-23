@@ -10,7 +10,7 @@ from mcs_agent import MCSAgent
 from minimax_agent import MinimaxAgent
 from id_minimax_agent import IDMinimaxAgent
 from human import Human
-# from agent import Agent    # After completing your agent, you can uncomment this line
+from agent import Agent, IDAgent    # After completing your agent, you can uncomment this line
 
 
 seed(13731367)
@@ -22,8 +22,10 @@ def main():
     # players = [MinimaxAgent, MCSAgent]
     # players = [Human, RandomAgent]      # <= EASY
     # players = [Human, Human]
-    players = [Human, MinimaxAgent]
+    # players = [Human, MinimaxAgent]
     # players = [Human, MCSAgent]
+    players = [Agent, MCSAgent]
+    # players = [Human, Agent]            # <= Rank of my agent
     # players = [Human, IDMinimaxAgent]   # <= HARD
     # players = [IDMinimaxAgent, MCSAgent]
 
