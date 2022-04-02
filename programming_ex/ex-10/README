@@ -25,12 +25,12 @@ The problems are represented as triples init,goal,actions where
            quadruples (name,condition,posEffects,negEffects)
            where
 	        'name'       is a string, unique to the action
-		'condition'  is list of state variables that must be
-		             True when action is taken.
-                'posEffects' is state variables that become True
-		             when the action is taken.
-                'negEffects' is state variables that become False
-		             when the action is taken.
+		      'condition'  is list of state variables that must be
+		                   True when action is taken.
+          'posEffects' is state variables that become True
+		                   when the action is taken.
+          'negEffects' is state variables that become False
+		                   when the action is taken.
 
 This language is sufficient to encode almost anything.
 For example, the Turing machine simulations used in Cook's
