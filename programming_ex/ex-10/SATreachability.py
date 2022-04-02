@@ -35,16 +35,30 @@ def reachability2fma(init,goal,actions,T):
 
     goalformulas = [ timedVar(v,T) for v in goalvars ]
 
+    # a@t -> x@t if x belongs to 'condition' for action 'a' for all t in 0..T
     preconditions = [ IMPL(timedAction(n,t),timedVar(x,t)) for n,c,pe,ne in actions for t in range(0,T) for x in c ]
 
-    posEffects = # IMPLEMENT THE FORMULA FOR POSITIVE EFFECTS
+    # IMPLEMENT THE FORMULA FOR POSITIVE EFFECTS 
+    # a@t -> x@(t+1) 
+    # if x belongs to 'posEffects' for action 'a' for all t in 0..T-1
+    posEffects = [ IMPL(timedAction(n,t),timedVar(x,t+1)) for n,c,pe,ne in actions for t in range(0,T-1) for x in pe ]
 
-    negEffects = # IMPLEMENT THE FORMULA FOR NEGATIVE EFFECTS
+    # IMPLEMENT THE FORMULA FOR NEGATIVE EFFECTS 
+    # a@t -> not x@(t+1) if x belongs to 'negEffects' for action 'a' for all t in 0..T-1
+    negEffects = [ IMPL(timedAction(n,t),NOT(timedVar(x,t+1))) for n,c,pe,ne in actions for t in range(0,T-1) for x in ne ]
 
-    posFrameAxioms = # IMPLEMENT THE POSITIVE FRAME AXIOMS
+    # IMPLEMENT THE POSITIVE FRAME AXIOMS 
+    # (not x@t & x@(t+1)) -> a1@t V a2@t V ... V an@t for all t in 0..T-1,
+    # where a1,a2,...,an are all actions with x in posEffects.
+    posFrameAxioms = AND()
 
-    negFrameAxioms = # IMPLEMENT THE NEGATIVE FRAME AXIOMS
+    # IMPLEMENT THE NEGATIVE FRAME AXIOMS
+    # (x@t & not x@(t+1)) -> a1@t V a2@t V ... V an@t for all t in 0..T-1, 
+    # where a1,a2,...,an are all actions with x in negEffects.
+    negFrameAxioms = 
 
-    actionMutexes = # IMPLEMENT THE ACTION EXCLUSION CONSTRAINTS
+    # IMPLEMENT THE ACTION EXCLUSION CONSTRAINTS 
+    # not(a1@t & a2@t) for all t in 0..T-1
+    actionMutexes = 
 
     return AND(initformulas + goalformulas + preconditions + posEffects + negEffects + posFrameAxioms + negFrameAxioms + actionMutexes)
