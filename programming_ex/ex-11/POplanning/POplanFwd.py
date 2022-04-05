@@ -14,6 +14,14 @@ def Bapplicable(bstate):
 ### YOUR CODE HERE
 ### YOUR CODE HERE
 ### YOUR CODE HERE
+    """
+    bstate: set of belief states (State)
+    Return: list of applicable actions (Action)
+    """
+    result = {action for s in bstate for action in s.applActions()}
+    for s in bstate:
+        result.intersection_update(set(s.applActions()))
+    return list(result)
     
 # Compute the successor state set w.r.t. a given action.
 
@@ -41,6 +49,11 @@ def DEBUG(s):
 import random
 
 def constructPlan(bstate,path,goalstates):
+    """
+    bstate: set of belief states (State)
+    path: list of sets of the reached belief states (State)
+    goalstates: set of goal states (State)
+    """
     # Return the empty plan if belief state is goal states only.
     if bstate.issubset(goalstates):
         DEBUG("Goals reached")
@@ -68,20 +81,33 @@ def constructPlan(bstate,path,goalstates):
     for act in actions: # Iterate over actions (OR)
         DEBUG("Trying action " + str(act))
 
-### WHAT IS THE IMPACT OF TAKING THE ACTION
-### INSERT YOUR CODE HERE!
+        ### WHAT IS THE IMPACT OF TAKING THE ACTION
+        ### INSERT YOUR CODE HERE!
+        bstate_act = Bsucc(bstate, act)
 
+        subplans = []
         for obs in act.observations(): # Iterate over observations (AND)
             DEBUG("Considering observation " + str(obs))
 
-### HOW DOES THE BELIEF STATE CHANGE UPON MAKING THIS OBSERVATION?
-### (IF THE OBSERVATION IS NOT POSSIBLE, DO NOT CONSIDER THIS CASE FURTHER!)
-### RECURSIVELY SEARCH FOR A PLAN FOR THE RESULTING BELIEF STATE
-### INSERT YOUR CODE HERE!
-### INSERT YOUR CODE HERE!
-### INSERT YOUR CODE HERE!
-### IF A SUBPLAN WAS FOUND FOR EVERY OBSERVATION, RETURN A PLAN
-### CONSISTING OF THE CURRENT ACTION AND THE SUBPLANS.
+            ### HOW DOES THE BELIEF STATE CHANGE UPON MAKING THIS OBSERVATION?
+            bstate_obs = Bobserve(bstate_act, obs)
+            ### (IF THE OBSERVATION IS NOT POSSIBLE, DO NOT CONSIDER THIS CASE FURTHER!)
+            if bstate_obs == {}:
+                break
+            ### RECURSIVELY SEARCH FOR A PLAN FOR THE RESULTING BELIEF STATE
+            ### INSERT YOUR CODE HERE!
+            ### INSERT YOUR CODE HERE!
+            ### INSERT YOUR CODE HERE!
+            subplan = constructPlan(bstate_obs, path+[bstate], goalstates)
+            if not subplan:
+                break
+            else:
+                subplans += [(obs, subplan)]
+
+        ### IF A SUBPLAN WAS FOUND FOR EVERY OBSERVATION, RETURN A PLAN
+        ### CONSISTING OF THE CURRENT ACTION AND THE SUBPLANS.
+        if len(subplans) == len(act.observations()):
+            return PlanNode(act, subplans)
 
     # IF no plan was found with any action, so return None
     DEBUG("No plan")
