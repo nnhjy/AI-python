@@ -1,7 +1,7 @@
 # Exercise for Course CS-E4800 Artificial Intelligence at Aalto University
 
-## 0. Python installing tips
-To add `python` and `py` as terminal command for the installed python.exe:
+## 0. Tips on installing Python
+To add `python` and `py` (install py launcher) as terminal command for the installed python.exe:
 1. System environment variable (if you install Python for all users):
 "Control Panel\All Control Panel Items\System --> Advanced system settings --> Advanced --> Environmental Variables --> Edit in `Path`" 
     - under "User variables for `administrator_username`" only for the administrator, under "System variables" for all users)
