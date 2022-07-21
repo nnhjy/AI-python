@@ -2,10 +2,11 @@
 
 ## 0. Tips on installing Python
 To add `python` and `py` (install py launcher) as terminal command for the installed python.exe:
-1. System environment variable (if you install Python for all users):
+1. System environment variable (if you install Python for all users to keep `python` and `py` command work everytime you restart the machine):
 "Control Panel\All Control Panel Items\System --> Advanced system settings --> Advanced --> Environmental Variables --> Edit in `Path`" 
     - under "User variables for `administrator_username`" only for the administrator, under "System variables" for all users)
-2. User environment variable (if you install Python for the current user): 
+    - on installing python, it is recommended to 1) install `python` and `py launcher` to all users and `add python to PATH` unless you would be fine to find `python` and `py` command not work when restarting the machine.
+2. User environment variable (if you install Python for the current user, `python` and `py` command would not work after restart): 
 Search `environment variables` in the Windows taskbar --> "Edit environment variable for your account" --> Edit in `Path` under "User variables for `the_current_username`"
 3. **Edit in `Path`**: add `X:\directory\to\Python3-x\Scripts` (for the `pip` applications) and `X:\directory\to\Python3-x` (for python.exe)
 
